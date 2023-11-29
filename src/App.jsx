@@ -18,7 +18,7 @@ function App() {
 
     setMessage("");
 
-    fetch("http://localhost:1337/", {
+    fetch("http://localhost:1337", {
         method: "post",
         headers: {
             "Content-Type": "application/json"
@@ -41,7 +41,7 @@ function App() {
   };
 
   const sendPrompt = async (event) => {
-    alert(event.key);
+    alert(event);
     if (event.key !== "Enter") {
       return;
     }
@@ -55,7 +55,7 @@ function App() {
         body: JSON.stringify({ prompt }),
       };
 
-      const res = await fetch("http://localhost:3000/ask", requestOptions);
+      const res = await fetch("http://localhost:1337", requestOptions);
 
       if (!res.ok) {
         throw new Error("Something went wrong");
@@ -105,7 +105,7 @@ function App() {
           onChange={(e) => setMessage(e.target.value)}
         />
       </form> */}
-      <form action="" onSubmit={(e) => sendPrompt(e, message)}>
+      <form action="" onSubmit={(e) => chat(e, message)}>
         <input
           type="text"
           name="message"
