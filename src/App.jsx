@@ -4,6 +4,7 @@ function App() {
   const [message, setMessage] = useState("");
   const [chats, setChats] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [prompt, updatePrompt] = useState(undefined);
 
   const chat = async (e, message) => {
     e.preventDefault();
@@ -39,9 +40,43 @@ function App() {
     // alert(message);
   };
 
+  const sendPrompt = async (event) => {
+    alert(event.key);
+    if (event.key !== "Enter") {
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt }),
+      };
+
+      const res = await fetch("http://localhost:3000/ask", requestOptions);
+
+      if (!res.ok) {
+        throw new Error("Something went wrong");
+      }
+
+      const { message } = await res.json();
+      setAnswer(message);
+    } catch (err) {
+      console.error(err, "err");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main>
-      <h1>FullStack Chat AI Tutorial</h1>
+      <h1>Artificial Intelligence: Assignment</h1>
+      <h2>Custom ChatBot using ChatGPT APIs</h2>
+      <h3>Student Details:</h3>
+      <h3>ID: 2022MT12292</h3>
+      <h3>Name: Jithin M P</h3>
       <section>
         {chats && chats.length
           ? chats.map((chat, index) => (
@@ -61,8 +96,16 @@ function App() {
           <i>{isTyping ? "..." : ""}</i>
         </p>
       </div>
-
-      <form action="" onSubmit={(e) => chat(e, message)}>
+      {/* <form action="" onSubmit={(e) => chat(e, message)}>
+        <input
+          type="text"
+          name="message"
+          value={message}
+          placeholder="Type a message here and hit Enter..."
+          onChange={(e) => setMessage(e.target.value)}
+        />
+      </form> */}
+      <form action="" onSubmit={(e) => sendPrompt(e, message)}>
         <input
           type="text"
           name="message"
